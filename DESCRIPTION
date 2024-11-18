@@ -15,3 +15,5 @@ RoxygenNote: 7.3.2
 Suggests: 
     spelling
 Language: en-US
+URL: https://github.com/WB-DECIS/mappingEditr
+BugReports: https://github.com/WB-DECIS/mappingEditr/issues
