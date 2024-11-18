@@ -6,11 +6,15 @@
 #'
 #' @param id Module ID
 #'
-#' @return A UI output for selecting a table to edit.
+#' @return A `selectInput` for selecting a table to edit.
 #' @export
 table_selector_ui <- function(id) {
   ns <- shiny::NS(id)
-  shiny::uiOutput(ns("table_selector"))
+  shiny::selectInput(
+    inputId = ns("table_choice"),
+    label = "Select table to edit:",
+    choices = NULL  # Initialize with NULL; choices will be set in the server
+  )
 }
 
 #' Table Selector Module Server
@@ -24,17 +28,32 @@ table_selector_ui <- function(id) {
 #' @export
 table_selector_server <- function(id, json_data) {
   shiny::moduleServer(id, function(input, output, session) {
-    output$table_selector <- shiny::renderUI({
+    # Update the selectInput choices whenever json_data changes
+    shiny::observeEvent(json_data(), {
       shiny::req(json_data())
       tables <- names(json_data())
-      shiny::selectInput(session$ns("table_choice"), "Select table to edit:", choices = tables)
+
+      # Preserve current selection if possible
+      current_selection <- input$table_choice
+      if (!is.null(current_selection) && current_selection %in% tables) {
+        selected <- current_selection
+      } else {
+        selected <- tables[1]  # Default to the first table if current selection is invalid
+      }
+
+      shiny::updateSelectInput(
+        session,
+        inputId = "table_choice",
+        choices = tables,
+        selected = selected
+      )
     })
 
     selected_table_name <- shiny::reactive({
       input$table_choice
     })
 
-    # Function to update table choices
+    # Function to update table choices (e.g., when tables are added or deleted)
     update_table_choices <- function(choices, selected = NULL) {
       shiny::updateSelectInput(session, "table_choice", choices = choices, selected = selected)
     }

@@ -10,7 +10,7 @@ table_selector_ui(id)
 \item{id}{Module ID}
 }
 \value{
-A UI output for selecting a table to edit.
+A `selectInput` for selecting a table to edit.
 }
 \description{
 A Shiny module UI for selecting tables from the JSON data.

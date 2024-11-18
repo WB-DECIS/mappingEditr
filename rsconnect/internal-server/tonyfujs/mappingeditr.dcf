@@ -1,0 +1,12 @@
+name: mappingeditr
+title: mappingEditr
+username: tonyfujs
+account: tonyfujs
+server: internal-server
+hostUrl: https://w0lxdrconn01.worldbank.org:443/__api__
+appId: 396
+bundleId: 1051
+url: https://w0lxdrconn01.worldbank.org/content/30e25127-10bf-4353-99d5-9807187aa854/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE

@@ -16,9 +16,13 @@ app_ui <- function(request) {
         bslib::card_header("Load and Edit JSON"),
         bslib::card_body(
           file_loader_ui("file_loader"),
-          table_manager_ui("table_manager"),
+          shiny::div(
+            class = "d-flex justify-content-start mb-3",
+            table_manager_ui("table_manager"),
+            add_row_ui("add_row"),
+            delete_row_ui("delete_row")
+          ),
           table_selector_ui("table_selector"),
-          row_manager_ui("row_manager"),
           table_editor_ui("table_editor"),
           shiny::div(
             class = "d-flex justify-content-between mt-3",

@@ -3,9 +3,11 @@
 library(testthat)
 library(shiny)
 
+path_to_json <-  test_path("testdata", "input.json")
+
 test_that("table_manager_server adds and deletes tables correctly", {
   # Mock reactives
-  json_data <- reactiveVal(list())
+  json_data <- reactiveVal(jsonlite::fromJSON(path_to_json))
   selected_table_name <- reactiveVal(NULL)
   update_table_choices_called <- FALSE
   update_table_choices <- function(choices, selected = NULL) {

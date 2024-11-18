@@ -20,8 +20,10 @@ app_server <- function(input, output, session) {
   selected_table <- table_editor$selected_table
   selected_rows <- table_editor$selected_rows
 
-  # Row manager module
-  row_manager_server("row_manager", selected_table_name, selected_table, selected_rows, json_data)
+  # Add row module
+  add_row_server("add_row", selected_table_name, selected_table, selected_rows, json_data)
+  # Delete row module
+  delete_row_server("delete_row", selected_table_name, selected_table, selected_rows, json_data)
 
   # Table manager module
   table_manager_server("table_manager", json_data, selected_table_name, update_table_choices)
