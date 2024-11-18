@@ -15,6 +15,7 @@ Imports:
     golem,
     httr,
     jsonlite,
+    pkgload,
     shiny
 Suggests: 
     spelling,
