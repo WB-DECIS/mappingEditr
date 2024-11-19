@@ -9,30 +9,47 @@ app_ui <- function(request) {
     # Leave this function for adding external resources
     golem_add_external_resources(),
     # Your application UI logic
-    bslib::page_fluid(
+    bslib::page_sidebar(
       theme = bslib::bs_theme(version = 5),
-      shiny::titlePanel("JSON Editor"),
+      title = "Master lookup editor",
+      sidebar = bslib::sidebar(
+        title = "Action panel",
+        file_loader_ui("file_loader"),
+        table_selector_ui("table_selector"),
+        add_table_ui("add_table"),
+        add_row_ui("add_row"),
+        delete_table_ui("delete_table"),
+        delete_row_ui("delete_row"),
+        download_ui("download")
+      ),
       bslib::card(
-        bslib::card_header("Load and Edit JSON"),
+        bslib::card_header("Table viewer"),
         bslib::card_body(
-          file_loader_ui("file_loader"),
-          shiny::div(
-            class = "d-flex justify-content-start mb-3",
-            table_manager_ui("table_manager"),
-            add_row_ui("add_row"),
-            delete_row_ui("delete_row")
-          ),
-          table_selector_ui("table_selector"),
-          table_editor_ui("table_editor"),
-          shiny::div(
-            class = "d-flex justify-content-between mt-3",
-            download_ui("download")
-          )
+          table_editor_ui("table_editor")
         )
       )
     )
   )
 }
+  #     bslib::card(
+  #       bslib::card_header("Load and Edit JSON"),
+  #
+  #
+  #         shiny::div(
+  #           class = "d-flex justify-content-start mb-3",
+  #
+  #         ),
+  #
+  #         ,
+  #         shiny::div(
+  #           class = "d-flex justify-content-between mt-3",
+  #           download_ui("download")
+  #         )
+  #       )
+  #     )
+  #   )
+  # )
+# }
 
 #' Add external Resources to the Application
 #'

@@ -2,8 +2,12 @@
 
 export(add_row_server)
 export(add_row_ui)
+export(add_table_server)
+export(add_table_ui)
 export(delete_row_server)
 export(delete_row_ui)
+export(delete_table_server)
+export(delete_table_ui)
 export(download_server)
 export(download_ui)
 export(file_loader_server)

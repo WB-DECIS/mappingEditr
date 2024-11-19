@@ -24,9 +24,10 @@ app_server <- function(input, output, session) {
   add_row_server("add_row", selected_table_name, selected_table, selected_rows, json_data)
   # Delete row module
   delete_row_server("delete_row", selected_table_name, selected_table, selected_rows, json_data)
-
-  # Table manager module
-  table_manager_server("table_manager", json_data, selected_table_name, update_table_choices)
+  # Add table module
+  add_table_server("add_table", json_data, selected_table_name, update_table_choices)
+  # Delete table module
+  delete_table_server("delete_table", json_data, selected_table_name, update_table_choices)
 
   # Download module
   download_server("download", json_data, file_path)
