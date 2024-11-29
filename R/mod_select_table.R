@@ -1,8 +1,11 @@
-# Table Selector Module
+# mod_table_selector.R
 
 #' Table Selector Module UI
 #'
+#' @description A Shiny module UI for selecting tables from the JSON data.
+#'
 #' @param id Module ID
+#'
 #' @return A `selectInput` for selecting a table to edit.
 #' @export
 select_table_ui <- function(id) {
@@ -16,9 +19,12 @@ select_table_ui <- function(id) {
 
 #' Table Selector Module Server
 #'
+#' @description A Shiny module server for handling table selection.
+#'
 #' @param id Module ID
 #' @param json_data A reactive value containing the JSON data.
-#' @return A reactive expression for the selected table name.
+#'
+#' @return A list containing the reactive `selected_table_name` and an `update_table_choices` function.
 #' @export
 select_table_server <- function(id, json_data) {
   shiny::moduleServer(id, function(input, output, session) {
@@ -32,7 +38,7 @@ select_table_server <- function(id, json_data) {
       if (!is.null(current_selection) && current_selection %in% tables) {
         selected <- current_selection
       } else {
-        selected <- if (length(tables) > 0) tables[1] else NULL
+        selected <- tables[1]  # Default to the first table if current selection is invalid
       }
 
       shiny::updateSelectInput(
@@ -41,34 +47,20 @@ select_table_server <- function(id, json_data) {
         choices = tables,
         selected = selected
       )
-
-      # Use the update function from the table selector module
-      update_table_choices(session = session,
-                           choices = tables,
-                           selected = input$table_choice)
-
-      # Reactive value to track the selected table name
-      selected_table_name <- shiny::reactive({
-        shiny::req(input$table_choice)
-        input$table_choice
-      })
     })
+
+    selected_table_name <- shiny::reactive({
+      input$table_choice
+    })
+
+    # Function to update table choices (e.g., when tables are added or deleted)
+    update_table_choices <- function(session, choices, selected = NULL) {
+      shiny::updateSelectInput(session, "table_choice", choices = choices, selected = selected)
+    }
+
+    return(list(
+      selected_table_name = selected_table_name,
+      update_table_choices = update_table_choices
+    ))
   })
-
-
-
-  return(list(
-    selected_table_name = selected_table_name,
-    update_table_choices = update_table_choices
-  ))
-}
-
-# Function to update table choices (e.g., when tables are added or deleted)
-update_table_choices <- function(session,
-                                 choices,
-                                 selected = NULL) {
-  shiny::updateSelectInput(session,
-                           "table_choice",
-                           choices = choices,
-                           selected = selected)
 }
