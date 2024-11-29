@@ -10,7 +10,7 @@
 #' @export
 file_loader_ui <- function(id) {
   ns <- shiny::NS(id)
-  shiny::fileInput(ns("file"), "Choose JSON File", accept = ".json")
+  shiny::fileInput(ns("file"), "Load existing mapping", accept = ".json")
 }
 
 #' File Loader Module Server
