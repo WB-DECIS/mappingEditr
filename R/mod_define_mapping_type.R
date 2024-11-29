@@ -104,12 +104,3 @@ show_define_mapping_type_modal <- function(ns,
   shiny::showModal(modal) # Requires a live session
 }
 
-
-# Function to update table choices (e.g., when tables are added or deleted)
-update_table_choices <- function(choices,
-                                 selected = NULL) {
-  shiny::updateSelectInput(session,
-                           "table_choice",
-                           choices = choices,
-                           selected = selected)
-}
