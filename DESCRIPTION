@@ -16,7 +16,8 @@ Imports:
     httr,
     jsonlite,
     pkgload,
-    shiny
+    shiny,
+    stringr
 Suggests: 
     spelling,
     testthat
