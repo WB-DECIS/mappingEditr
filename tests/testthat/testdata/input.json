@@ -1,0 +1,41 @@
+{
+  "COMP_BREAKDOWN_1": [
+    {
+      "FROM": "reading",
+      "TO": "READ"
+    },
+    {
+      "FROM": "math",
+      "TO": "MATH"
+    },
+    {
+      "FROM": "science",
+      "TO": "SCIE"
+    }
+  ],
+  "COMP_BREAKDOWN_2": [
+    {
+      "FROM": "pri",
+      "TO": "PRIMARY"
+    },
+    {
+      "FROM": "sec",
+      "TO": "SECONDARY"
+    },
+    {
+      "FROM": "ter",
+      "TO": "TERTIARY"
+    }
+  ],
+  "FREQ": [
+    {
+      "FIXED": "A"
+    }
+  ],
+  "REF_AREA": [
+    {
+      "FROM": "FRA",
+      "TO": "France"
+    }
+  ]
+}

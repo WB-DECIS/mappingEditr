@@ -7,4 +7,8 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
+library(shiny)
+library(htmltools)
+library(jsonlite)
+library(mockery)
 testthat::test_dir("testthat")

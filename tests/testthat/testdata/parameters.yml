@@ -1,0 +1,83 @@
+#-------------------------------------------------------------------------------
+# FMR parameters
+fmr:
+  sandbox: 
+    url: 'http://20.172.237.136:8080/'
+    endpoint_path: 'ws/public/sdmxapi/rest/codelist/'
+    items:
+      # Sandbox
+      # add_item_endpoint: 'ws/secure/sdmxapi/rest'
+      # QA
+      add_item_endpoint: 'FMR/ws/secure/sdmxapi/rest'
+    validation:
+      load_endpoint: 'ws/public/data/load'
+      load_status_endpoint: 'ws/public/data/loadStatus'
+  qa:
+    url: 'https://fmrqa.worldbank.org/'
+    endpoint: 'FMR/sdmx/v2/structure/'
+    endpoint_path: 'FMR/sdmx/v2/structure/codelist/' # We may delete this line later
+    structure_endpoint: 'FMR/sdmx/v2/structure/datastructure/'
+    artifacts:
+      codelist: 'codelist/'
+      hierarchy: 'hierarchy/'
+    items:
+      add_item_endpoint: 'FMR/ws/secure/sdmxapi/rest'
+    validation:
+      load_endpoint: 'FMR/ws/public/data/load'
+      load_status_endpoint: 'FMR/ws/public/data/loadStatus'
+  agency: 
+    wb: 'WB/'
+    wb_data360: 'WB.DATA360/'
+    sdmx: 'SDMX/'
+  codelist:
+    ref_area: 'CL_REF_AREA'
+    country: 'CL_REF_ECONOMY'
+    income_group: 'CL_REF_INCOME_LEVEL'
+    region: 'CL_REF_REGION'
+    other_areas: 'CL_REF_GROUPINGS'
+    other_economies: 'CL_REF_AREA'
+    freq: 'CL_FREQ'
+    unit: 'CL_UNIT_MEASURE'
+    age: 'CL_AGE'
+    database_id_data360: 'CL_DATABASE_ID_DATA360'
+    indicator_data360: 'CL_INDICATOR_DATA360'
+    comp_breakdown_data360: 'CL_COMP_BREAKDOWN_D360'
+  hierarchy:
+    regions: 'HCL_WB_REGIONS/'
+    income: 'HCL_WB_INCOME/'
+  version: 
+    v1: '1.0'
+    v1.1: '1.1'
+    v2: '2.0'
+    v2.1: '2.1'
+  format: '?format=fusion-json'
+  action:
+    merge: 'MERGE'
+    replace: 'REPLACE'
+  
+#-------------------------------------------------------------------------------
+# Sharepoint parameters
+one_drive: 
+  authority_url: 'https://login.microsoftonline.com/'
+  resource_url: 'https://graph.microsoft.com/'
+  scope: '.default'
+  sharepoint_host_name: 'worldbankgroup.sharepoint.com'
+  api_version: 'v1.0'
+  site_id: 'efiosfiles'
+  rel_path: "WB-Corporate/Data-Bank/Data360/DEC/Data"
+
+#-------------------------------------------------------------------------------
+# Project parameters
+# Primary_folder is the name of the folders where the processed files are saved 
+# inside each pipeline
+primary_folder:
+  individual: 'INDIVIDUAL'
+  merged: 'MERGED'
+
+#-------------------------------------------------------------------------------
+# Utils parameters
+# We can use these parameters to test nodes that have booleans as inputs. 
+# This will allow us to run a single node instead of running all the nodes prior.
+booleans:
+  project_true: true
+  project_false: false
