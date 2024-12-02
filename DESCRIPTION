@@ -15,6 +15,7 @@ Imports:
     golem,
     httr,
     jsonlite,
+    mockery,
     pkgload,
     shiny,
     stringr

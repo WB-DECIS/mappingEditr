@@ -30,7 +30,7 @@ test_that("file_loader_server handles file upload and parsing correctly", {
     name = "Test",
     value = 123
   )
-  write_json(sample_data, temp_json)
+  jsonlite::write_json(sample_data, temp_json)
 
   # Simulate the file input object
   file_input <- list(
@@ -162,7 +162,7 @@ test_that("file_loader_server handles JSON with special characters", {
   sample_data <- list(
     text = "Special characters: é, ñ, ü, 中文, العربية"
   )
-  write_json(sample_data, temp_json)
+  jsonlite::write_json(sample_data, temp_json)
 
   # Simulate the file input object
   file_input <- list(
