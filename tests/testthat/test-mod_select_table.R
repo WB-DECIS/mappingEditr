@@ -182,3 +182,59 @@ test_that("select_table_server preserves current selection when possible", {
 #   )
 # })
 
+test_that("parse_list_for_choices returns correctly structured output", {
+  # Input list
+  input_list <- list(
+    components = c("mpg", "cyl", "disp"),
+    representation = list(FREQ = NULL, REF_AREA = NULL, MEASURE = NULL)
+  )
+
+  # Expected output
+  expected_output <- list(
+    `components` = list(components = "components"),
+    `representation` = list(
+      FREQ = "FREQ",
+      REF_AREA = "REF_AREA",
+      MEASURE = "MEASURE"
+    )
+  )
+
+  # Run function and compare output
+  result <- parse_list_for_choices(input_list)
+  expect_equal(result, expected_output)
+})
+
+test_that("parse_list_for_choices handles empty representation", {
+  # Input list with empty representation
+  input_list <- list(
+    components = c("mpg", "cyl", "disp"),
+    representation = list()
+  )
+
+  # Expected output
+  expected_output <- list(
+    `components` = list(components = "components"),
+    `representation` = list()
+  )
+
+  # Run function and compare output
+  result <- parse_list_for_choices(input_list)
+  expect_equal(result, expected_output)
+})
+
+test_that("parse_list_for_choices handles missing representation", {
+  # Input list without representation
+  input_list <- list(
+    components = c("mpg", "cyl", "disp")
+  )
+
+  # Expected output
+  expected_output <- list(
+    `components` = list(components = "components"),
+    `representation` = list()
+  )
+
+  # Run function and compare output
+  result <- parse_list_for_choices(input_list)
+  expect_equal(result, expected_output)
+})

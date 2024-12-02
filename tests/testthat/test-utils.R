@@ -308,9 +308,9 @@ test_that("create_mapping_table creates a Fixed table", {
   expect_true("FixedTable" %in% names(full_data))
 
   # Check the structure of the Fixed table
-  expect_true(is.data.frame(full_data[["FixedTable"]]))
-  expect_equal(names(full_data[["FixedTable"]]), "FIXED")
-  expect_equal(nrow(full_data[["FixedTable"]]), 0) # Ensure the table is empty
+  expect_true(is.data.frame(full_data$representation[["FixedTable"]]))
+  expect_equal(names(full_data$representation[["FixedTable"]]), "FIXED")
+  expect_equal(nrow(full_data$representation[["FixedTable"]]), 0) # Ensure the table is empty
 })
 
 test_that("create_mapping_table creates a Mapping table", {
@@ -321,9 +321,9 @@ test_that("create_mapping_table creates a Mapping table", {
   expect_true("MappingTable" %in% names(full_data))
 
   # Check the structure of the Mapping table
-  expect_true(is.data.frame(full_data[["MappingTable"]]))
-  expect_equal(names(full_data[["MappingTable"]]), c("SOURCE", "TARGET"))
-  expect_equal(nrow(full_data[["MappingTable"]]), 0) # Ensure the table is empty
+  expect_true(is.data.frame(full_data$representation[["MappingTable"]]))
+  expect_equal(names(full_data$representation[["MappingTable"]]), c("SOURCE", "TARGET"))
+  expect_equal(nrow(full_data$representation[["MappingTable"]]), 0) # Ensure the table is empty
 })
 
 test_that("create_mapping_table does not modify full_data for Implicit type", {
@@ -353,6 +353,6 @@ test_that("create_mapping_table can update an existing table", {
 
   # Check that the FixedTable was updated
   expect_true("FixedTable" %in% names(full_data))
-  expect_equal(names(full_data[["FixedTable"]]), "FIXED")
-  expect_equal(nrow(full_data[["FixedTable"]]), 0) # The table should be reset
+  expect_equal(names(full_data$representation[["FixedTable"]]), "FIXED")
+  expect_equal(nrow(full_data$representation[["FixedTable"]]), 0) # The table should be reset
 })

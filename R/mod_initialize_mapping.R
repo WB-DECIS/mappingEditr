@@ -77,16 +77,24 @@ initialize_map_server <- function(id,
         return()
       }
 
-      # Process the DSD information to create json_data
-      new_json_data <- list()
-
+      # Process the DSD information to create empty json_data structure
       concepts <- extract_concepts_from_dsd(dsd_info)
       all_concept_ids <- c(concepts$dimensions, concepts$attributes, concepts$measures)
 
+      new_json_data <- list(components = vector("list", length = 1),
+                            representation = vector("list", length = length(all_concept_ids)))
+
+      # Fill out json_data structure with DSD information
+      ## Add components
+      components_df <- data.frame(source = NA,
+                                  target = all_concept_ids,
+                                  stringsAsFactors = FALSE)
+      new_json_data$components <- components_df
       # Create empty data frames for each concept
-      for (concept_id in all_concept_ids) {
-        new_json_data[[concept_id]] <- NA
-      }
+      names(new_json_data$representation) <- all_concept_ids
+      # for (concept_id in all_concept_ids) {
+      #   new_json_data[[concept_id]] <- NA
+      # }
 
       # Update the json_data reactiveVal
       json_data(new_json_data)

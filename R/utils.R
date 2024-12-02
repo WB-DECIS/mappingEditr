@@ -184,17 +184,58 @@ create_mapping_table <- function(full_data,
   # check that only valid table types are being passed
   valid_table_types <- eval(formals(create_mapping_table)$table_type)
   match.arg(table_type, valid_table_types)
+  #browser()
   if (table_type == "Fixed") {
-    full_data[[table_name]] <- data.frame(FIXED = character(0),
-                                          stringsAsFactors = FALSE)
+    full_data$representation[[table_name]] <- data.frame(FIXED = character(0),
+                                                         stringsAsFactors = FALSE)
     return(full_data)
   } else if (table_type == "Mapping") {
-    full_data[[table_name]] <- data.frame(SOURCE = character(0),
-                                          TARGET = character(0),
-                                          stringsAsFactors = FALSE)
+    full_data$representation[[table_name]] <- data.frame(SOURCE = character(0),
+                                                         TARGET = character(0),
+                                                         stringsAsFactors = FALSE)
     return(full_data)
   } else {
     return(full_data)
   }
 }
 
+#' Select correct table
+#'
+#' This function retrieves a specific mapping element from a JSON-like data
+#' structure. It allows selecting either a `components` table or a table
+#' from the `representation` field within the JSON data.
+#'
+#' @param json_data A function or reactive expression returning a list
+#'   containing JSON data. The JSON data should have the structure:
+#'   - `components`: A named element representing the components table.
+#'   - `representation`: A list containing representation tables.
+#' @param table_name A character string specifying the table to retrieve.
+#'   - If `"components"`, the function returns the `components` element.
+#'   - Otherwise, it retrieves the table from the `representation` field.
+#' @return The specified table data, or `NULL` if the table does not exist.
+#' @examples
+#' json_data <- function() {
+#'   list(
+#'     components = list(mpg = "mpg", cyl = "cyl"),
+#'     representation = list(
+#'       FREQ = list(freq1 = "value1"),
+#'       REF_AREA = list(ref1 = "value2")
+#'     )
+#'   )
+#' }
+#'
+#' # Retrieve the components table
+#' select_mapping_element(json_data, "components")
+#'
+#' # Retrieve a representation table
+#' select_mapping_element(json_data, "FREQ")
+#'
+#' @export
+select_correct_table <- function(json_data, table_name) {
+  if (table_name == "components") {
+    table_data <- json_data[[table_name]]
+  } else {
+    table_data <- json_data$representation[[table_name]]
+  }
+  return(table_data)
+}

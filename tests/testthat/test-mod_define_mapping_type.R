@@ -59,7 +59,7 @@ test_that("json_data is updated when user confirms table type", {
       table_type = table_type
     )
     # Simulate the creation of a data.frame
-    full_data[[table_name]] <- data.frame(Type = table_type)
+    full_data$representation[[table_name]] <- data.frame(Type = table_type)
     return(full_data)
   }
 

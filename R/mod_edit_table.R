@@ -8,7 +8,7 @@
 #'
 #' @return A `DTOutput` for displaying the editable table.
 #' @export
-table_editor_ui <- function(id) {
+edit_table_ui <- function(id) {
   ns <- shiny::NS(id)
   DT::DTOutput(ns("table"))
 }
@@ -23,13 +23,15 @@ table_editor_ui <- function(id) {
 #'
 #' @return A list containing the reactive `selected_table` and `selected_rows`.
 #' @export
-table_editor_server <- function(id, selected_table_name, json_data) {
+edit_table_server <- function(id, selected_table_name, json_data) {
   shiny::moduleServer(id, function(input, output, session) {
     selected_table <- shiny::reactiveVal(NULL)
 
     shiny::observeEvent(selected_table_name(), {
       shiny::req(json_data(), selected_table_name())
-      selected_data <- json_data()[[selected_table_name()]]
+      selected_data <- select_correct_table(json_data = json_data(),
+                                            table_name = selected_table_name())
+
       if (is.data.frame(selected_data)) {
         selected_table(selected_data)
       } else {
@@ -50,7 +52,7 @@ table_editor_server <- function(id, selected_table_name, json_data) {
 
       # Update the main json_data
       full_data <- json_data()
-      full_data[[selected_table_name()]] <- updated_data
+      full_data$representation[[selected_table_name()]] <- updated_data
       json_data(full_data)
     })
 

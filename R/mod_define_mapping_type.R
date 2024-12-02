@@ -13,8 +13,9 @@ define_mapping_type_server <- function(id, json_data, selected_table_name) {
       shiny::req(json_data())
       table_name <- selected_table_name()
       shiny::req(table_name)  # Ensure table name is valid
-
-      table_data <- json_data()[[table_name]]
+      #browser()
+      table_data <- select_correct_table(json_data = json_data(),
+                                         table_name = table_name)
 
       # Check if the table is not a data.frame
       if (!is.data.frame(table_data)) {
@@ -103,4 +104,6 @@ show_define_mapping_type_modal <- function(ns,
                                      selected_type)
   shiny::showModal(modal) # Requires a live session
 }
+
+
 

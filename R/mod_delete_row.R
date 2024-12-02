@@ -36,7 +36,7 @@ delete_row_server <- function(id, selected_table_name, selected_table, selected_
 
         # Update the main json_data
         full_data <- json_data()
-        full_data[[selected_table_name()]] <- updated_table
+        full_data$representation[[selected_table_name()]] <- updated_table
         json_data(full_data)
         selected_table(updated_table)
 

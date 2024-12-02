@@ -56,7 +56,7 @@ delete_table_server <- function(id, json_data, selected_table_name, update_table
     shiny::observeEvent(input$confirm_delete_table, {
       shiny::req(selected_table_name()) # Ensure a table is still selected
       full_data <- json_data()          # Get the current dataset
-      full_data[[selected_table_name()]] <- NULL # Remove the selected table
+      full_data$representation[[selected_table_name()]] <- NULL # Remove the selected table
       json_data(full_data)              # Update the reactive dataset
 
       # STEP 2: Update the table selector to reflect the change

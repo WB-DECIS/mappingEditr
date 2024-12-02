@@ -1,37 +1,3 @@
-#' The application User-Interface
-#'
-#' @param request Internal parameter for `{shiny}`.
-#'     DO NOT REMOVE.
-#' @import shiny
-#' @noRd
-# app_ui <- function(request) {
-#   tagList(
-#     # Leave this function for adding external resources
-#     golem_add_external_resources(),
-#     # Your application UI logic
-#     bslib::page_sidebar(
-#       theme = bslib::bs_theme(version = 5),
-#       title = "Master lookup editor",
-#       sidebar = bslib::sidebar(
-#         title = "Action panel",
-#         file_loader_ui("file_loader"),
-#         table_selector_ui("table_selector"),
-#         add_table_ui("add_table"),
-#         add_row_ui("add_row"),
-#         delete_table_ui("delete_table"),
-#         delete_row_ui("delete_row"),
-#         download_ui("download")
-#       ),
-#       bslib::card(
-#         bslib::card_header("Table viewer"),
-#         bslib::card_body(
-#           table_editor_ui("table_editor")
-#         )
-#       )
-#     )
-#   )
-# }
-
 app_ui <- function(request) {
   tagList(
     # Add custom CSS for dynamic sidebar width
@@ -100,7 +66,7 @@ app_ui <- function(request) {
           bslib::card(
             bslib::card_header("Table Viewer"),
             bslib::card_body(
-              table_editor_ui("table_editor")
+              edit_table_ui("table_editor")
             )
           )
         ),

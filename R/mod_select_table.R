@@ -31,7 +31,9 @@ select_table_server <- function(id, json_data) {
     # Update the selectInput choices whenever json_data changes
     shiny::observeEvent(json_data(), {
       shiny::req(json_data())
-      tables <- names(json_data())
+      #browser()
+      choices <- parse_list_for_choices(json_data())
+      tables <- choices$flat
 
       # Preserve current selection if possible
       current_selection <- input$table_choice
@@ -44,7 +46,7 @@ select_table_server <- function(id, json_data) {
       shiny::updateSelectInput(
         session,
         inputId = "table_choice",
-        choices = tables,
+        choices = choices$nested,
         selected = selected
       )
     })
@@ -64,3 +66,39 @@ select_table_server <- function(id, json_data) {
     ))
   })
 }
+
+#' Parse a List to Generate Nested Choices for Shiny Inputs
+#'
+#' This function processes a given list to create a nested structure suitable
+#' for the `choices` argument in Shiny `selectInput()` components. It takes
+#' two elements from the input list: `components` and `representation`, and
+#' organizes them into a named list for dropdown menus.
+#'
+#' @param data_list A list with at least two elements:
+#'   - `components`: A vector of component names.
+#'   - `representation`: A named list of representations.
+#' @return A named list where:
+#'   - The `components` key contains a single element with a name and value of "components".
+#'   - The `representation` key contains a list with the names of `representation` elements.
+#' @examples
+#' input_list <- list(
+#'   components = c("mpg", "cyl", "disp"),
+#'   representation = list(FREQ = NULL, REF_AREA = NULL, MEASURE = NULL)
+#' )
+#' parse_list_for_choices(input_list)
+#'
+#' @export
+parse_list_for_choices <- function(data_list) {
+  names_component <- "components"
+  names_representation <- names(data_list$representation)
+  flat <- c(names_component, names_representation)
+
+  nested <- list(
+    `components` = list(components = names_component),
+    `representation` = setNames(as.list(names_representation), names_representation)
+  )
+
+  return(list(flat = flat,
+              nested = nested))
+}
+

@@ -40,7 +40,7 @@ app_server <- function(input,
   )
 
   # Table editor module
-  table_editor <- table_editor_server("table_editor",
+  table_editor <- edit_table_server("table_editor",
                                       selected_table_name,
                                       json_data)
   selected_table <- table_editor$selected_table
