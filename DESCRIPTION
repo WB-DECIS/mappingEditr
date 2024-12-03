@@ -15,8 +15,10 @@ Imports:
     golem,
     httr,
     jsonlite,
+    mockery,
     pkgload,
-    shiny
+    shiny,
+    stringr
 Suggests: 
     spelling,
     testthat
