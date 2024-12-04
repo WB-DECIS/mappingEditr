@@ -239,3 +239,48 @@ select_correct_table <- function(json_data, table_name) {
   }
   return(table_data)
 }
+
+#' Update Correct Table in JSON Data
+#'
+#' @description Updates a specific table within a JSON-like object based on the provided table name and updated data.
+#'
+#' @param json_data A list representing the JSON-like object containing the data to be updated.
+#' @param table_name A character string specifying the name of the table to update.
+#'        If the table name is `"components"`, the function updates the `component` field;
+#'        otherwise, it updates the `representation` field.
+#' @param updated_data The new data to assign to the specified table. It should match the structure
+#'        expected by the targeted table within the JSON-like object.
+#'
+#' @return The updated `json_data` object with the specified table updated with the `updated_data`.
+#'
+#' @details This function is designed to handle updates to specific parts of a JSON-like object. The
+#'          structure of the `json_data` is assumed to have either a `component` or `representation`
+#'          field that stores the tables being updated. The choice of which field to update depends
+#'          on the value of `table_name`.
+#'
+#' @examples
+#' # Example JSON-like data
+#' json_data <- list(
+#'   component = list(components = data.frame(id = 1, value = "A")),
+#'   representation = list(other_table = data.frame(id = 2, value = "B"))
+#' )
+#'
+#' # Updated data for the "components" table
+#' updated_data <- data.frame(id = 3, value = "C")
+#'
+#' # Update the "components" table
+#' updated_json <- update_correct_table(json_data, "components", updated_data)
+#'
+#' # Check the updated JSON
+#' print(updated_json$component$components)
+#'
+#' @export
+update_correct_table <- function(json_data, table_name, updated_data) {
+  if (table_name == "components") {
+    json_data$components <- updated_data
+  } else {
+    json_data$representation[[table_name]] <- updated_data
+  }
+  return(json_data)
+}
+
