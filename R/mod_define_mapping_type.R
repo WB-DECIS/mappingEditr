@@ -1,5 +1,17 @@
 # Table Definition Module
 
+#' Table Definition Module UI
+#'
+#' @param id Module ID
+#' @return UI elements for the table definition module.
+#' @export
+define_mapping_type_ui <- function(id) {
+  ns <- shiny::NS(id)
+  shiny::tagList(
+    DT::DTOutput(ns("table"))
+  )
+}
+
 #' Table Definition Module Server
 #'
 #' @param id Module ID
@@ -9,23 +21,20 @@
 #' @export
 define_mapping_type_server <- function(id, json_data, selected_table_name) {
   shiny::moduleServer(id, function(input, output, session) {
-    shiny::observeEvent(selected_table_name(), {
-      shiny::req(json_data())
-      table_name <- selected_table_name()
-      shiny::req(table_name)  # Ensure table name is valid
-      #browser()
-      table_data <- select_correct_table(json_data = json_data(),
-                                         table_name = table_name)
+    selected_table <- shiny::reactiveVal(NULL)
 
-      # Check if the table is not a data.frame
+    shiny::observeEvent(selected_table_name(), {
+      table_name <- selected_table_name()
+      shiny::req(json_data())
+      shiny::req(table_name)
+      table_data <- select_correct_table(json_data = json_data(), table_name = table_name)
+
       if (!is.data.frame(table_data)) {
-        # Show the modal for table definition
         show_define_mapping_type_modal(
           ns = session$ns,
           table_name = table_name
         )
 
-        # Handle table type confirmation
         shiny::observeEvent(input$confirm_define_mapping_type, {
           shiny::req(input$table_type)
           full_data <- json_data()
@@ -35,13 +44,24 @@ define_mapping_type_server <- function(id, json_data, selected_table_name) {
             table_type = input$table_type
           )
           json_data(full_data)
+          # Update selected_table with the new data
+          table_data <- select_correct_table(json_data = full_data, table_name = table_name)
+          selected_table(table_data)
           shiny::removeModal()
           shiny::showNotification(
             paste0(table_name, " table type successfully defined!"),
             type = "message"
           )
         })
+      } else {
+        # Update selected_table when table_data is a data.frame
+        selected_table(table_data)
       }
+    })
+
+    output$table <- DT::renderDT({
+      shiny::req(selected_table())
+      DT::datatable(selected_table(), editable = TRUE, selection = 'single')
     })
   })
 }
