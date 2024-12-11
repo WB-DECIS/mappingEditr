@@ -17,18 +17,17 @@ app_server <- function(input,
   selected_dsd_id <- dsd_selector$selected_dsd_id
 
   # Initialize new mapping module
-  initialize_map_server("initialize_map",
-                        json_data,
-                        selected_instance_url,
-                        selected_dsd_id)
+  json_data <- initialize_map_server("initialize_map",
+                                     selected_instance_url,
+                                     selected_dsd_id)
   # File loader module
-  file_loader <- file_loader_server("file_loader")
-  json_data <- file_loader$json_data
-  file_path <- file_loader$file_path
+  # file_loader <- file_loader_server("file_loader")
+  # json_data <- file_loader$json_data
+  # file_path <- file_loader$file_path
 
   # Table selector module
   table_selector <- select_table_server("table_selector",
-                                          json_data)
+                                        json_data)
   selected_table_name <- table_selector$selected_table_name
   update_table_choices <- table_selector$update_table_choices  # Get the update function
 
@@ -40,41 +39,41 @@ app_server <- function(input,
   )
 
   # Table editor module
-  table_editor <- edit_table_server("table_editor",
-                                      selected_table_name,
-                                      json_data)
-  selected_table <- table_editor$selected_table
-  selected_rows <- table_editor$selected_rows
+  # table_editor <- edit_table_server("table_editor",
+  #                                     selected_table_name,
+  #                                     json_data)
+  # selected_table <- table_editor$selected_table
+  # selected_rows <- table_editor$selected_rows
 
   # Add row module
-  add_row_server("add_row",
-                 selected_table_name,
-                 selected_table,
-                 selected_rows,
-                 json_data)
+  # add_row_server("add_row",
+  #                selected_table_name,
+  #                selected_table,
+  #                selected_rows,
+  #                json_data)
   # Delete row module
-  delete_row_server("delete_row",
-                    selected_table_name,
-                    selected_table,
-                    selected_rows,
-                    json_data)
+  # delete_row_server("delete_row",
+  #                   selected_table_name,
+  #                   selected_table,
+  #                   selected_rows,
+  #                   json_data)
   # Add table module
-  add_table_server("add_table",
-                   json_data,
-                   selected_table_name,
-                   update_table_choices)
+  # add_table_server("add_table",
+  #                  json_data,
+  #                  selected_table_name,
+  #                  update_table_choices)
   # Delete table module
-  delete_table_server("delete_table",
-                      json_data,
-                      selected_table_name,
-                      update_table_choices)
+  # delete_table_server("delete_table",
+  #                     json_data,
+  #                     selected_table_name,
+  #                     update_table_choices)
 
   # Download module
-  download_server("download",
-                  json_data,
-                  file_path)
+  # download_server("download",
+  #                 json_data,
+  #                 file_path)
 
   # List viewer module
-  view_list_server("view_list",
-                   file_path)
+  # view_list_server("view_list",
+  #                  file_path)
 }

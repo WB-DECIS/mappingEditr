@@ -51,8 +51,9 @@ edit_table_server <- function(id, selected_table_name, json_data) {
       selected_table(updated_data)
 
       # Update the main json_data
-      full_data <- json_data()
-      full_data$representation[[selected_table_name()]] <- updated_data
+      full_data <- update_correct_table(json_data = json_data(),
+                                        table_name = selected_table_name(),
+                                        updated_data = updated_data)
       json_data(full_data)
     })
 

@@ -23,17 +23,16 @@ initialize_map_ui <- function(id) {
 #' @description A Shiny module server for initializing a new lookup from a selected DSD.
 #'
 #' @param id Module ID
-#' @param json_data A reactiveVal that stores the JSON data.
 #' @param selected_instance_url A reactive expression that returns the base URL for API calls.
 #' @param selected_dsd_id A reactive expression that returns the selected DSD ID.
 #'
 #' @return None.
 #' @export
 initialize_map_server <- function(id,
-                                  json_data,
                                   selected_instance_url,
                                   selected_dsd_id) {
   shiny::moduleServer(id, function(input, output, session) {
+    json_data <- shiny::reactiveVal(NULL)
     ns <- session$ns
 
     # Observe the initialize lookup button
@@ -92,15 +91,13 @@ initialize_map_server <- function(id,
       new_json_data$components <- components_df
       # Create empty data frames for each concept
       names(new_json_data$representation) <- all_concept_ids
-      # for (concept_id in all_concept_ids) {
-      #   new_json_data[[concept_id]] <- NA
-      # }
 
       # Update the json_data reactiveVal
-      json_data(new_json_data)
+      json_data <- json_data(new_json_data)
 
       # Notify the user
       shiny::showNotification("Lookup initialized successfully!", type = "message")
     })
+    return(json_data)
   })
 }

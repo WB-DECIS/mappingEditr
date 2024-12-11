@@ -10,10 +10,13 @@
 #' @export
 select_table_ui <- function(id) {
   ns <- shiny::NS(id)
-  shiny::selectInput(
-    inputId = ns("table_choice"),
-    label = "Select table to edit:",
-    choices = NULL  # Initialize with NULL; choices will be set in the server
+  shiny::tagList(
+    shiny::selectInput(
+      inputId = ns("table_choice"),
+      label = "Select table to edit:",
+      choices = NULL  # Initialize with NULL; choices will be set in the server
+    ),
+      DT::DTOutput(ns("table"))
   )
 }
 
