@@ -4,12 +4,14 @@
 \alias{select_table_server}
 \title{Table Selector Module Server}
 \usage{
-select_table_server(id, json_data)
+select_table_server(id, json_data, selected_instance_url)
 }
 \arguments{
 \item{id}{Module ID}
 
 \item{json_data}{A reactive value containing the JSON data.}
+
+\item{selected_instance_url}{A reactive value containing FMR base URL.}
 }
 \value{
 A list containing the reactive `selected_table_name` and an `update_table_choices` function.

@@ -27,7 +27,8 @@ app_server <- function(input,
 
   # Table selector module
   table_selector <- select_table_server("table_selector",
-                                        json_data)
+                                        json_data,
+                                        selected_instance_url)
   selected_table_name <- table_selector$selected_table_name
   update_table_choices <- table_selector$update_table_choices  # Get the update function
 
