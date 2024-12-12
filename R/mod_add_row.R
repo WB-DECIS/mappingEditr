@@ -29,9 +29,7 @@ add_row_server <- function(id, selected_table_name, selected_table, selected_row
   shiny::moduleServer(id, function(input, output, session) {
     shiny::observeEvent(input$add_row, {
       shiny::req(selected_table())
-      current_table <- selected_table()
-      new_row <- as.data.frame(lapply(current_table, function(x) NA), stringsAsFactors = FALSE)
-      updated_table <- rbind(current_table, new_row)
+      updated_table <- append_empty_row(input_df = selected_table())
       selected_table(updated_table)
 
       # Update the main json_data

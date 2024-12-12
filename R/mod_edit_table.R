@@ -27,11 +27,14 @@ edit_table_server <- function(id, selected_table_name, json_data) {
   shiny::moduleServer(id, function(input, output, session) {
     selected_table <- shiny::reactiveVal(NULL)
 
-    shiny::observeEvent(selected_table_name(), {
+    # Use observe instead of observeEvent so it reacts to changes in both
+    # selected_table_name() and json_data()
+    shiny::observe({
       shiny::req(json_data(), selected_table_name())
       selected_data <- select_correct_table(json_data = json_data(),
                                             table_name = selected_table_name())
 
+      # Ensure the data is a data.frame
       if (is.data.frame(selected_data)) {
         selected_table(selected_data)
       } else {
@@ -43,6 +46,7 @@ edit_table_server <- function(id, selected_table_name, json_data) {
       shiny::req(selected_table())
       DT::datatable(selected_table(), editable = TRUE, selection = 'single')
     })
+
 
     shiny::observeEvent(input$table_cell_edit, {
       info <- input$table_cell_edit
