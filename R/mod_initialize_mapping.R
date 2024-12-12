@@ -25,18 +25,22 @@ initialize_map_ui <- function(id) {
 #' @param id Module ID
 #' @param selected_instance_url A reactive expression that returns the base URL for API calls.
 #' @param selected_dsd_id A reactive expression that returns the selected DSD ID.
+#' @param json_data A reactive expression that returns the mapping structure.
 #'
 #' @return None.
 #' @export
 initialize_map_server <- function(id,
                                   selected_instance_url,
-                                  selected_dsd_id) {
+                                  selected_dsd_id,
+                                  json_data) {
   shiny::moduleServer(id, function(input, output, session) {
-    json_data <- shiny::reactiveVal(NULL)
     ns <- session$ns
 
     # Observe the initialize lookup button
     shiny::observeEvent(input$initialize_map, {
+      shiny::req(json_data)
+      shiny::req(selected_instance_url)
+      shiny::req(selected_dsd_id)
       # Check if a DSD ID is selected
       dsd_id <- selected_dsd_id()
       if (is.null(dsd_id) || dsd_id == "") {

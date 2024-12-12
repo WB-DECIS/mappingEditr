@@ -4,7 +4,7 @@
 \alias{initialize_map_server}
 \title{Initialize Lookup Module Server}
 \usage{
-initialize_map_server(id, selected_instance_url, selected_dsd_id)
+initialize_map_server(id, selected_instance_url, selected_dsd_id, json_data)
 }
 \arguments{
 \item{id}{Module ID}
@@ -12,6 +12,8 @@ initialize_map_server(id, selected_instance_url, selected_dsd_id)
 \item{selected_instance_url}{A reactive expression that returns the base URL for API calls.}
 
 \item{selected_dsd_id}{A reactive expression that returns the selected DSD ID.}
+
+\item{json_data}{A reactive expression that returns the mapping structure.}
 }
 \value{
 None.

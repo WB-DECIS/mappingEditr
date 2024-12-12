@@ -22,9 +22,10 @@ app_server <- function(input,
   file_path <- file_loader$file_path
 
   # Initialize new mapping module
-  json_data <- initialize_map_server("initialize_map",
-                                     selected_instance_url,
-                                     selected_dsd_id)
+  initialize_map_server("initialize_map",
+                        selected_instance_url,
+                        selected_dsd_id,
+                        json_data)
 
   # Table selector module
   table_selector <- select_table_server("table_selector",
