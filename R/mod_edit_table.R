@@ -44,7 +44,10 @@ edit_table_server <- function(id, selected_table_name, json_data) {
 
     output$table <- DT::renderDT({
       shiny::req(selected_table())
-      DT::datatable(selected_table(), editable = TRUE, selection = 'single')
+      DT::datatable(selected_table(),
+                    editable  = TRUE,
+                    selection = 'multiple',
+                    rownames  = FALSE)
     })
 
 
