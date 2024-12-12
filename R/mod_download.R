@@ -31,8 +31,10 @@ download_ui <- function(id) {
 download_server <- function(id, json_data, file_path) {
   # Define the module server logic
   shiny::moduleServer(id, function(input, output, session) {
+
     # Define the download handler for the button
     output$download <- shiny::downloadHandler(
+
       # Dynamic filename: prepend "updated_" to the original file's basename
       filename = function() {
         paste0("updated_", basename(file_path()))
@@ -40,7 +42,10 @@ download_server <- function(id, json_data, file_path) {
       # Define the content of the file to be downloaded
       content = function(file) {
         # Convert the reactive JSON data to a formatted JSON string
-        json_data_to_save <- jsonlite::toJSON(json_data(), pretty = TRUE, auto_unbox = TRUE)
+        json_data_to_save <- jsonlite::toJSON(json_data(),
+                                              pretty = TRUE,
+                                              auto_unbox = TRUE,
+                                              na = "string")
 
         # Write the JSON string to the file path provided by the `downloadHandler`
         writeLines(json_data_to_save, file)

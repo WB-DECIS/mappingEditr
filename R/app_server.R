@@ -16,14 +16,15 @@ app_server <- function(input,
                                     selected_instance_url)
   selected_dsd_id <- dsd_selector$selected_dsd_id
 
+  # File loader module
+  file_loader <- file_loader_server("file_loader")
+  json_data <- file_loader$json_data
+  file_path <- file_loader$file_path
+
   # Initialize new mapping module
   json_data <- initialize_map_server("initialize_map",
                                      selected_instance_url,
                                      selected_dsd_id)
-  # File loader module
-  file_loader <- file_loader_server("file_loader")
-  # json_data <- file_loader$json_data
-  file_path <- file_loader$file_path
 
   # Table selector module
   table_selector <- select_table_server("table_selector",
