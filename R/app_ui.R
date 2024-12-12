@@ -67,7 +67,6 @@ app_ui <- function(request) {
             bslib::card_header("Table Viewer"),
             bslib::card_body(
               edit_table_ui("table_editor"),
-              define_mapping_type_ui("table_definition")
             )
           )
         ),

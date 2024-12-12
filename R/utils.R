@@ -186,13 +186,16 @@ create_mapping_table <- function(full_data,
   match.arg(table_type, valid_table_types)
   #browser()
   if (table_type == "Fixed") {
-    full_data$representation[[table_name]] <- data.frame(FIXED = character(0),
-                                                         stringsAsFactors = FALSE)
+    new_df <- append_empty_row(input_df = data.frame(FIXED = character(0),
+                                                     stringsAsFactors = FALSE))
+    full_data$representation[[table_name]] <- new_df
+
     return(full_data)
   } else if (table_type == "Mapping") {
-    full_data$representation[[table_name]] <- data.frame(SOURCE = character(0),
-                                                         TARGET = character(0),
-                                                         stringsAsFactors = FALSE)
+    new_df <- append_empty_row(input_df = data.frame(SOURCE = character(0),
+                                                     TARGET = character(0),
+                                                     stringsAsFactors = FALSE))
+    full_data$representation[[table_name]] <- new_df
     return(full_data)
   } else {
     return(full_data)
@@ -284,3 +287,29 @@ update_correct_table <- function(json_data, table_name, updated_data) {
   return(json_data)
 }
 
+#' Append an empty row to a data frame
+#'
+#' This function takes an input data frame and appends a new row containing
+#' \code{NA} values for each of its columns. This can be useful for initializing
+#' a new entry in a table or ensuring that a minimum row structure is maintained.
+#'
+#' @param input_df A data frame. The data frame to which an empty row should be appended.
+#'
+#' @return A data frame with one additional row, where the new row's values are \code{NA}.
+#'
+#' @examples
+#' # Example usage:
+#' df <- data.frame(a = 1:3, b = c("x", "y", "z"), stringsAsFactors = FALSE)
+#' df_updated <- append_empty_row(df)
+#' df_updated
+#'
+#' @export
+append_empty_row <- function(input_df) {
+  # Create a new row with NA values for each column
+  new_row <- as.data.frame(lapply(input_df, function(x) NA), stringsAsFactors = FALSE)
+
+  # Bind the new row to the original data frame
+  updated_df <- rbind(input_df, new_row)
+
+  return(updated_df)
+}

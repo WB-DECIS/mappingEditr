@@ -356,3 +356,72 @@ test_that("create_mapping_table can update an existing table", {
   expect_equal(names(full_data$representation[["FixedTable"]]), "FIXED")
   expect_equal(nrow(full_data$representation[["FixedTable"]]), 0) # The table should be reset
 })
+
+library(testthat)
+
+test_that("append_empty_row adds one empty row to a simple data frame", {
+  df <- data.frame(a = 1:3, b = c("x","y","z"), stringsAsFactors = FALSE)
+  result <- append_empty_row(df)
+
+  # Check that the new data frame has one more row than the original
+  expect_equal(nrow(result), nrow(df) + 1)
+
+  # The last row should be all NA
+  expect_true(all(is.na(result[nrow(result), ])))
+})
+
+test_that("append_empty_row works on an empty data frame", {
+  df <- data.frame()
+  result <- append_empty_row(df)
+
+  # The new data frame should have exactly one row
+  expect_equal(nrow(result), 1)
+
+  # Since there are no columns, appending a row should still work,
+  # but it results in no columns and one row
+  expect_equal(ncol(result), 0)
+})
+
+test_that("append_empty_row preserves column classes", {
+  df <- data.frame(
+    int_col = 1:3,
+    factor_col = factor(c("low", "medium", "high")),
+    date_col = as.Date("2021-01-01") + 0:2,
+    stringsAsFactors = FALSE
+  )
+
+  result <- append_empty_row(df)
+
+  # Check that the new row is appended
+  expect_equal(nrow(result), nrow(df) + 1)
+
+  # The appended row should be all NA
+  expect_true(all(is.na(result[nrow(result), ])))
+
+  # Check that classes are preserved
+  expect_equal(class(result$int_col), "integer")
+  expect_equal(class(result$factor_col), "factor")
+  expect_equal(class(result$date_col), "Date")
+})
+
+test_that("append_empty_row works with a mixture of column types", {
+  df <- data.frame(
+    numeric_col = c(3.14, 2.71),
+    logical_col = c(TRUE, FALSE),
+    char_col = c("one", "two"),
+    stringsAsFactors = FALSE
+  )
+
+  result <- append_empty_row(df)
+
+  # Check the number of rows
+  expect_equal(nrow(result), 3)
+
+  # Verify that the last row is all NA
+  expect_true(all(is.na(result[3, ])))
+
+  # Classes should remain unchanged
+  expect_equal(class(result$numeric_col), "numeric")
+  expect_equal(class(result$logical_col), "logical")
+  expect_equal(class(result$char_col), "character")
+})
