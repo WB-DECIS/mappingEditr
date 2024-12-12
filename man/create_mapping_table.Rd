@@ -7,7 +7,8 @@
 create_mapping_table(
   full_data,
   table_name,
-  table_type = c("Implicit", "Fixed", "Mapping")
+  table_type = c("Implicit", "Fixed", "Mapping"),
+  populated_df = NULL
 )
 }
 \arguments{
@@ -15,7 +16,9 @@ create_mapping_table(
 
 \item{table_name}{A string specifying the name of the new table to be created.}
 
-\item{table_type}{A string indicating the type of the table to be created.
+\item{table_type}{A string indicating the type of the table to be created.}
+
+\item{populated_df}{A data.frame containing a TARGET codelist IDs and LABELs.
 Must be one of `"Implicit"`, `"Fixed"`, or `"Mapping"`. Defaults to `"Implicit"`.}
 }
 \value{

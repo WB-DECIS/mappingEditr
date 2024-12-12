@@ -155,6 +155,7 @@ parse_dsd_list <- function(api_response) {
 #' @param full_data A named list representing the full dataset. This is where the new table will be added.
 #' @param table_name A string specifying the name of the new table to be created.
 #' @param table_type A string indicating the type of the table to be created.
+#' @param populated_df A data.frame containing a TARGET codelist IDs and LABELs.
 #'   Must be one of `"Implicit"`, `"Fixed"`, or `"Mapping"`. Defaults to `"Implicit"`.
 #'
 #' @details
@@ -180,7 +181,8 @@ parse_dsd_list <- function(api_response) {
 #' @export
 create_mapping_table <- function(full_data,
                                  table_name,
-                                 table_type = c("Implicit", "Fixed", "Mapping")) {
+                                 table_type = c("Implicit", "Fixed", "Mapping"),
+                                 populated_df = NULL) {
   # check that only valid table types are being passed
   valid_table_types <- eval(formals(create_mapping_table)$table_type)
   match.arg(table_type, valid_table_types)
@@ -192,10 +194,7 @@ create_mapping_table <- function(full_data,
 
     return(full_data)
   } else if (table_type == "Mapping") {
-    new_df <- append_empty_row(input_df = data.frame(SOURCE = character(0),
-                                                     TARGET = character(0),
-                                                     stringsAsFactors = FALSE))
-    full_data$representation[[table_name]] <- new_df
+    full_data$representation[[table_name]] <- populated_df
     return(full_data)
   } else {
     return(full_data)
@@ -312,4 +311,99 @@ append_empty_row <- function(input_df) {
   updated_df <- rbind(input_df, new_row)
 
   return(updated_df)
+}
+
+#' Parse SDMX Codelist
+#'
+#' This function takes a parsed JSON object (as a list) representing an SDMX codelist
+#' structure and extracts the `items.id` and `items.names.value` fields. It returns
+#' a two-column data frame with columns `ID` and `LABEL`.
+#'
+#' @param json A list representing the parsed JSON structure of an SDMX codelist.
+#'
+#' @return A data frame with two columns: `ID` and `LABEL`.
+#'
+#' @examples
+#' # Assuming 'json' is the parsed JSON structure shown in the prompt:
+#' # json <- jsonlite::fromJSON("path_to_json_file.json", simplifyVector = FALSE)
+#' df <- parse_sdmx_cl(json)
+#' head(df)
+#'
+#' @export
+parse_sdmx_cl <- function(json) {
+  # Extract the first codelist. If there's more than one, adjust accordingly.
+  codelist <- json$Codelist[[1]]
+
+  # Extract items
+  items <- codelist$items
+
+  # Extract IDs
+  ids <- vapply(items, function(x) x$id, FUN.VALUE = character(1))
+
+  # Extract Labels (assuming 'names' is always at least one element and 'value' is present)
+  labels <- vapply(items, function(x) x$names[[1]]$value, FUN.VALUE = character(1))
+
+  # Create a two-column data frame
+  df <- data.frame(
+    ID = ids,
+    LABEL = labels,
+    stringsAsFactors = FALSE
+  )
+
+  # Sort the dataframe alphabetically by ID
+  df <- df[order(df$ID), ]
+
+  return(df)
+}
+
+#' Fetch and Parse SDMX Codelist
+#'
+#' This function retrieves a codelist from the SDMX API, parses it, and returns a data frame
+#' containing the codelist's IDs and labels.
+#'
+#' @param table_name The name of the table to derive the codelist ID.
+#' @param instance_url A function or string representing the base URL of the API endpoint.
+#'
+#' @return A data frame with two columns: `ID` and `LABEL`. Returns `NULL` if an error occurs.
+#'
+#' @examples
+#' # Example usage
+#' instance_url <- function() "https://example.com/"
+#' df <- fetch_cl("UNIT_MEASURE", instance_url)
+#' head(df)
+#'
+#' @export
+fetch_cl <- function(table_name, instance_url) {
+  # Initialize the result
+  codelist_df <- NULL
+  cl_id <- paste0("CL_", table_name)
+
+  tryCatch({
+    # Construct the API URL
+    api_base_url <- instance_url
+    api_url <- paste0(
+      api_base_url,
+      "FMR/ws/public/sdmxapi/rest/codelist/WB/",
+      cl_id,
+      "?format=fusion-json"
+    )
+
+    # Make the API call
+    response <- httr::GET(api_url)
+
+    # Check if the response is successful
+    if (httr::status_code(response) == 200) {
+      # Parse the response content
+      response_content <- httr::content(response, as = "parsed", type = "application/json")
+      codelist_df <- parse_sdmx_cl(response_content)
+    } else {
+      stop("Failed to fetch codelist. Status code: ", httr::status_code(response))
+    }
+  }, error = function(e) {
+    # Handle errors and show a notification in Shiny
+    shiny::showNotification(paste("Error:", e$message), type = "error")
+  })
+
+  # Return the codelist or NULL if an error occurred
+  return(codelist_df)
 }
