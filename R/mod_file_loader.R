@@ -24,7 +24,7 @@ file_loader_ui <- function(id) {
 file_loader_server <- function(id) {
   shiny::moduleServer(id, function(input, output, session) {
     json_data <- shiny::reactiveVal(NULL)
-    file_path <- shiny::reactiveVal(NULL)
+    file_path <- shiny::reactiveVal("mapping.json")
 
     shiny::observeEvent(input$file, {
       shiny::req(input$file)

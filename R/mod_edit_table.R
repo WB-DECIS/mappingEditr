@@ -44,12 +44,16 @@ edit_table_server <- function(id, selected_table_name, json_data) {
 
     output$table <- DT::renderDT({
       shiny::req(selected_table())
-      DT::datatable(selected_table(), editable = TRUE, selection = 'single')
+      DT::datatable(selected_table(),
+                    editable  = TRUE,
+                    selection = 'multiple',
+                    rownames  = FALSE)
     })
 
 
     shiny::observeEvent(input$table_cell_edit, {
       info <- input$table_cell_edit
+      info$col <- info$col + 1 # Fix 0 indexing issue that pops-up when removing rownames
       updated_data <- selected_table()
       updated_data[info$row, info$col] <- info$value
       selected_table(updated_data)

@@ -34,6 +34,7 @@ select_table_server <- function(id, json_data, selected_instance_url) {
   shiny::moduleServer(id, function(input, output, session) {
 
     selected_table_data <- shiny::reactiveVal(NULL)
+    codelist_df <- shiny::reactiveVal(NULL)  # Store the codelist data
     # Update the dropdown menu choices ----
     shiny::observeEvent(json_data(), {
       #browser()
@@ -89,6 +90,10 @@ select_table_server <- function(id, json_data, selected_instance_url) {
       if (input$table_type == "Mapping") {
         # Get codelist values
         codelist_df <- fetch_cl(table_name = table_name, instance_url = fmr_url)
+        shiny::req(codelist_df)
+        # Store the codelist data in a reactive value
+        codelist_df(codelist_df)
+
         # Render the DataTable
         output$codelist_table <- DT::renderDT({
           shiny::req(codelist_df)
@@ -123,13 +128,14 @@ select_table_server <- function(id, json_data, selected_instance_url) {
 
     # Step 3 & 4: After user selects rows and clicks confirm in the modal
     observeEvent(input$confirm_codelist_selection, {
+      shiny::req(codelist_df())  # Ensure codelist data is available
       # Get selected rows from DT
       sel <- input$codelist_table_rows_selected
       req(sel, length(sel) > 0)
 
       # Extract selected rows from codelist_data
-      selected_ids <- codelist_df[sel, "ID"]
-      selected_labels <- codelist_df[sel, "LABEL"]
+      selected_ids <- codelist_df()[sel, "ID"]
+      selected_labels <- codelist_df()[sel, "LABEL"]
 
       # Create a three-column data frame: SOURCE, TARGET, LABEL
       # SOURCE initially NA or empty (your choice), TARGET from IDs, LABEL from labels
@@ -186,8 +192,9 @@ select_table_server <- function(id, json_data, selected_instance_url) {
       req(selected_table_data())
       DT::datatable(
         selected_table_data(),
-        editable = TRUE,
-        selection = 'single'
+        editable  = TRUE,
+        selection = 'multiple',
+        rownames  = FALSE
       )
     })
 
