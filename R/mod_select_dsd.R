@@ -50,7 +50,6 @@ select_dsd_server <- function(id, selected_instance_url) {
     shiny::observeEvent(selected_instance_url(), {
       shiny::req(selected_instance_url())
       api_base_url <- selected_instance_url()
-      #browser()
       api_url <- paste0(api_base_url, "FMR/sdmx/v2/structure/datastructure/*/*/*?format=fusion-json&detail=allstubs&includeMetadata=false&includeAllAnnotations=false")
 
       # Show a loading message

@@ -27,19 +27,20 @@ select_table_ui <- function(id) {
 #' @param id Module ID
 #' @param json_data A reactive value containing the JSON data.
 #' @param selected_instance_url A reactive value containing FMR base URL.
-#'
+#' @param concepts_to_cl A lookup table linking concepts to their corresponding codelists
 #' @return A list containing the reactive `selected_table_name` and an `update_table_choices` function.
 #' @export
-select_table_server <- function(id, json_data, selected_instance_url) {
+select_table_server <- function(id,
+                                json_data,
+                                selected_instance_url,
+                                concepts_to_cl) {
   shiny::moduleServer(id, function(input, output, session) {
 
     selected_table_data <- shiny::reactiveVal(NULL)
     codelist_df <- shiny::reactiveVal(NULL)  # Store the codelist data
     # Update the dropdown menu choices ----
     shiny::observeEvent(json_data(), {
-      #browser()
       shiny::req(json_data())
-      #browser()
       choices <- parse_list_for_choices(json_data())
       tables <- choices$flat
 
@@ -63,7 +64,6 @@ select_table_server <- function(id, json_data, selected_instance_url) {
       input$table_choice
     })
     shiny::observeEvent(selected_table_name(), {
-      #browser()
       shiny::req(json_data())
       shiny::req(selected_table_name())
       # Show modal to define table type if table does not exist yet
@@ -89,7 +89,9 @@ select_table_server <- function(id, json_data, selected_instance_url) {
 
       if (input$table_type == "Mapping") {
         # Get codelist values
-        codelist_df <- fetch_cl(table_name = table_name, instance_url = fmr_url)
+        codelist_df <- fetch_cl(table_name = table_name,
+                                concepts_to_cl = concepts_to_cl(),
+                                instance_url = fmr_url)
         shiny::req(codelist_df)
         # Store the codelist data in a reactive value
         codelist_df(codelist_df)
@@ -165,26 +167,6 @@ select_table_server <- function(id, json_data, selected_instance_url) {
         type = "message"
       )
     })
-      # #browser()
-      # shiny::req(input$table_type)
-      # full_data <- json_data()
-      # table_name <- selected_table_name()
-      # full_data <- create_mapping_table(
-      #   full_data,
-      #   table_name,
-      #   table_type = input$table_type,
-      #   fmr_url = selected_instance_url()
-      # )
-      # json_data(full_data)
-      # # Update selected_table with the new data
-      # table_data <- select_correct_table(json_data = full_data, table_name = table_name)
-      # selected_table_data(table_data)
-      # shiny::removeModal()
-      # shiny::showNotification(
-      #   paste0(table_name, " table type successfully defined!"),
-      #   type = "message"
-    #  )
-    #})
 
     # Render table in main view pane ----
     # This ensures that whenever selected_table_data changes, the table updates

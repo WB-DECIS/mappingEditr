@@ -208,5 +208,56 @@ test_that("initialize_map_server shows warning if no DSD is selected", {
 #   )
 # })
 
+test_that("create_concepts_to_cl_lkup returns expected output", {
+  # A minimal mock response object
+  resp_mock <- list(
+    DataStructure = list(
+      list(
+        dimensionList = list(
+          dimensions = list(
+            list(
+              concept = "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:TEST_SCHEME(1.0).FREQ",
+              representation = list(representation = "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=SDMX:CL_FREQ(2.1)")
+            )
+          )
+        ),
+        attributeList = list(
+          attributes = list(
+            list(
+              concept = "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:TEST_SCHEME(1.0).UNIT",
+              representation = list(representation = "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=SDMX:CL_UNIT(1.0)")
+            )
+          )
+        ),
+        measures = list(
+          list(
+            concept = "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:TEST_SCHEME(1.0).OBS_VALUE",
+            # No representation codelist for measures in this mock
+            representation = list()
+          )
+        )
+      )
+    )
+  )
+
+  result <- create_concepts_to_cl_lkup(resp_mock)
+
+  # Basic structural tests
+  expect_s3_class(result, "data.frame")
+  expect_true(all(c("concept_id", "codelist_id") %in% names(result)))
+  expect_equal(nrow(result), 3)
+
+  # Check values
+  freq_row <- result[result$concept_id == "FREQ", ]
+  expect_equal(freq_row$codelist_id, "SDMX:CL_FREQ(2.1)")
+
+  unit_row <- result[result$concept_id == "UNIT", ]
+  expect_equal(unit_row$codelist_id, "SDMX:CL_UNIT(1.0)")
+
+  obs_value_row <- result[result$concept_id == "OBS_VALUE", ]
+  expect_true(is.na(obs_value_row$codelist_id))
+})
+
+
 
 
