@@ -187,14 +187,30 @@ create_mapping_table <- function(full_data,
   valid_table_types <- eval(formals(create_mapping_table)$table_type)
   match.arg(table_type, valid_table_types)
   if (table_type == "Fixed") {
-    new_df <- append_empty_row(input_df = data.frame(FIXED = character(0),
-                                                     stringsAsFactors = FALSE))
-    full_data$representation[[table_name]] <- new_df
+    if (is.null(populated_df)) {
+      new_df <- append_empty_row(input_df = data.frame(FIXED = character(0),
+                                                       LABEL = character(0),
+                                                       stringsAsFactors = FALSE))
+      full_data$representation[[table_name]] <- new_df
 
-    return(full_data)
+      return(full_data)
+    } else {
+      full_data$representation[[table_name]] <- populated_df
+      return(full_data)
+    }
   } else if (table_type == "Mapping") {
-    full_data$representation[[table_name]] <- populated_df
-    return(full_data)
+    if (is.null(populated_df)) {
+      new_df <- append_empty_row(input_df = data.frame(SOURCE = character(0),
+                                                       TARGET = character(0),
+                                                       LABEL = character(0),
+                                                       stringsAsFactors = FALSE))
+      full_data$representation[[table_name]] <- new_df
+
+      return(full_data)
+    } else {
+      full_data$representation[[table_name]] <- populated_df
+      return(full_data)
+    }
   } else {
     return(full_data)
   }

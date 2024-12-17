@@ -57,10 +57,10 @@ app_server <- function(input,
                     selected_rows,
                     json_data)
   # Add table module
-  add_table_server("add_table",
-                   json_data,
-                   selected_table_name,
-                   update_table_choices)
+  # add_table_server("add_table",
+  #                  json_data,
+  #                  selected_table_name,
+  #                  update_table_choices)
   # Delete table module
   delete_table_server("delete_table",
                       json_data,

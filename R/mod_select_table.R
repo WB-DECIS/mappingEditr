@@ -86,28 +86,30 @@ select_table_server <- function(id,
       full_data <- json_data()
       table_name <- selected_table_name()
       fmr_url <- selected_instance_url()
+      concepts_to_cl <- concepts_to_cl()
 
-      if (input$table_type == "Mapping") {
-        # Get codelist values
-        codelist_df <- fetch_cl(table_name = table_name,
-                                concepts_to_cl = concepts_to_cl(),
-                                instance_url = fmr_url)
-        shiny::req(codelist_df)
-        # Store the codelist data in a reactive value
-        codelist_df(codelist_df)
-
-        # Render the DataTable
-        output$codelist_table <- DT::renderDT({
+      if (input$table_type %in% c("Fixed", "Mapping") &
+          table_name %in% concepts_to_cl$concept_id) {
+          # Get codelist values
+          codelist_df <- fetch_cl(table_name = table_name,
+                                  concepts_to_cl = concepts_to_cl,
+                                  instance_url = fmr_url)
           shiny::req(codelist_df)
-          DT::datatable(
-            codelist_df,
-            selection = "multiple",  # Allow multiple row selection
-            rownames = FALSE
-          )
-        })
+          # Store the codelist data in a reactive value
+          codelist_df(codelist_df)
 
-        # Show modal with codelist data
-        show_codelist_modal(session$ns, codelist_df)
+          # Render the DataTable
+          output$codelist_table <- DT::renderDT({
+            shiny::req(codelist_df)
+            DT::datatable(
+              codelist_df,
+              selection = "multiple",  # Allow multiple row selection
+              rownames = FALSE
+            )
+          })
+
+          # Show modal with codelist data
+          show_codelist_modal(session$ns, codelist_df)
       } else {
         # Handle other types as before
         # e.g., if Fixed
@@ -118,7 +120,8 @@ select_table_server <- function(id,
           )
         json_data(full_data)
         # Update selected_table with the new data
-        table_data <- select_correct_table(json_data = full_data, table_name = table_name)
+        table_data <- select_correct_table(json_data = full_data,
+                                           table_name = table_name)
         selected_table_data(table_data)
         shiny::removeModal()
         shiny::showNotification(
@@ -139,23 +142,44 @@ select_table_server <- function(id,
       selected_ids <- codelist_df()[sel, "ID"]
       selected_labels <- codelist_df()[sel, "LABEL"]
 
-      # Create a three-column data frame: SOURCE, TARGET, LABEL
-      # SOURCE initially NA or empty (your choice), TARGET from IDs, LABEL from labels
-      populated_df <- data.frame(
-        SOURCE = NA_character_,
-        TARGET = selected_ids,
-        LABEL = selected_labels,
-        stringsAsFactors = FALSE
-      )
+      if (input$table_type == "Fixed") {
+        # Create a two-column data frame: TARGET, LABEL
+        # TARGET from IDs, LABEL from labels
+        populated_df <- data.frame(
+          TARGET = selected_ids,
+          LABEL = selected_labels,
+          stringsAsFactors = FALSE
+        )
 
-      # Integrate into full_data
-      full_data <- json_data()
-      full_data <- create_mapping_table(
-        full_data,
-        selected_table_name(),
-        table_type = "Mapping",
-        populated_df = populated_df
-      )
+        # Integrate into full_data
+        full_data <- json_data()
+        full_data <- create_mapping_table(
+          full_data,
+          selected_table_name(),
+          table_type = "Fixed",
+          populated_df = populated_df
+        )
+
+      } else {
+
+        # Create a three-column data frame: SOURCE, TARGET, LABEL
+        # SOURCE initially NA or empty (your choice), TARGET from IDs, LABEL from labels
+        populated_df <- data.frame(
+          SOURCE = NA_character_,
+          TARGET = selected_ids,
+          LABEL = selected_labels,
+          stringsAsFactors = FALSE
+        )
+
+        # Integrate into full_data
+        full_data <- json_data()
+        full_data <- create_mapping_table(
+          full_data,
+          selected_table_name(),
+          table_type = "Mapping",
+          populated_df = populated_df
+        )
+      }
 
       # Update json_data
       json_data(full_data)
@@ -171,7 +195,7 @@ select_table_server <- function(id,
     # Render table in main view pane ----
     # This ensures that whenever selected_table_data changes, the table updates
     output$table <- DT::renderDT({
-      req(selected_table_data())
+      shiny::req(selected_table_data())
       DT::datatable(
         selected_table_data(),
         editable  = TRUE,
@@ -182,7 +206,10 @@ select_table_server <- function(id,
 
   # Function to update table choices (e.g., when tables are added or deleted)
   update_table_choices <- function(session, choices, selected = NULL) {
-    shiny::updateSelectInput(session, "table_choice", choices = choices, selected = selected)
+    shiny::updateSelectInput(session,
+                             "table_choice",
+                             choices = choices,
+                             selected = selected)
   }
 
   return(list(
