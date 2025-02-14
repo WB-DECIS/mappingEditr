@@ -203,6 +203,7 @@ create_mapping_table <- function(full_data,
       new_df <- append_empty_row(input_df = data.frame(SOURCE = character(0),
                                                        TARGET = character(0),
                                                        LABEL = character(0),
+                                                       IS_REGEX = FALSE,
                                                        stringsAsFactors = FALSE))
       full_data$representation[[table_name]] <- new_df
 

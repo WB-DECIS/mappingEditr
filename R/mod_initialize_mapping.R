@@ -91,8 +91,8 @@ initialize_map_server <- function(id,
 
       ## Fill out json_data structure with DSD information ----
       ### Add components ----
-      components_df <- data.frame(source = NA,
-                                  target = all_concept_ids,
+      components_df <- data.frame(SOURCE = NA,
+                                  TARGET = all_concept_ids,
                                   stringsAsFactors = FALSE)
       new_json_data$components <- components_df
       # Create empty data frames for each concept
