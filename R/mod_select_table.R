@@ -168,6 +168,7 @@ select_table_server <- function(id,
           SOURCE = NA_character_,
           TARGET = selected_ids,
           LABEL = selected_labels,
+          IS_REGEX = FALSE,
           stringsAsFactors = FALSE
         )
 
