@@ -4,7 +4,7 @@
 \alias{select_table_server}
 \title{Table Selector Module Server}
 \usage{
-select_table_server(id, json_data, selected_instance_url)
+select_table_server(id, json_data, selected_instance_url, concepts_to_cl)
 }
 \arguments{
 \item{id}{Module ID}
@@ -12,6 +12,8 @@ select_table_server(id, json_data, selected_instance_url)
 \item{json_data}{A reactive value containing the JSON data.}
 
 \item{selected_instance_url}{A reactive value containing FMR base URL.}
+
+\item{concepts_to_cl}{A lookup table linking concepts to their corresponding codelists}
 }
 \value{
 A list containing the reactive `selected_table_name` and an `update_table_choices` function.

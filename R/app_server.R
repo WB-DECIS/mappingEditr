@@ -22,15 +22,17 @@ app_server <- function(input,
   file_path <- file_loader$file_path
 
   # Initialize new mapping module
-  initialize_map_server("initialize_map",
+  concepts_to_cl <- initialize_map_server("initialize_map",
                         selected_instance_url,
                         selected_dsd_id,
                         json_data)
+  #concepts_to_cl <- init$concepts_to_cl
 
   # Table selector module
   table_selector <- select_table_server("table_selector",
                                         json_data,
-                                        selected_instance_url)
+                                        selected_instance_url,
+                                        concepts_to_cl)
   selected_table_name <- table_selector$selected_table_name
   update_table_choices <- table_selector$update_table_choices  # Get the update function
 
@@ -55,10 +57,10 @@ app_server <- function(input,
                     selected_rows,
                     json_data)
   # Add table module
-  add_table_server("add_table",
-                   json_data,
-                   selected_table_name,
-                   update_table_choices)
+  # add_table_server("add_table",
+  #                  json_data,
+  #                  selected_table_name,
+  #                  update_table_choices)
   # Delete table module
   delete_table_server("delete_table",
                       json_data,

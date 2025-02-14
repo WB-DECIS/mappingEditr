@@ -16,7 +16,6 @@
 #     json_data = mock_json_data,
 #     file_path = mock_file_path
 #   ), {
-#     browser()
 #     # Trigger the content function in downloadHandler
 #     session$output$download$content(temp_file)
 #

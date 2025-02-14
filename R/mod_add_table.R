@@ -30,6 +30,7 @@ add_table_ui <- function(id) {
 #' @export
 add_table_server <- function(id, json_data, selected_table_name, update_table_choices) {
   shiny::moduleServer(id, function(input, output, session) {
+    #selected_table_data <- shiny::reactiveVal(NULL)
     # STEP 1: Show modal if "Add table" if clicked
     shiny::observeEvent(input$add_table, {
       show_add_table_modal(ns = session$ns) # Show modal for table creation
@@ -38,7 +39,7 @@ add_table_server <- function(id, json_data, selected_table_name, update_table_ch
     # STEP 2: Add new table
     shiny::observeEvent(input$confirm_add_table, {
       shiny::req(input$new_table_name, input$table_type) # Ensure inputs are not NULL or empty
-
+      #browser()
       new_table_name <- input$new_table_name # Capture the new table name from the modal input
 
       # Check if the table name is valid and does not already exist
@@ -54,17 +55,33 @@ add_table_server <- function(id, json_data, selected_table_name, update_table_ch
 
         # STEP 3: Update the table choices in the table dropdown menu
         update_table_choices(
+          session = session,
           choices = names(full_data),
           selected = new_table_name # Auto-select the newly added table
         )
 
         shiny::removeModal() # Close the modal dialog
         shiny::showNotification("New table added successfully!", type = "message") # Success notification
+
+        # Render table in main view pane ----
+        # This ensures that whenever selected_table_data changes, the table updates
+        output$table <- DT::renderDT({
+          #shiny::req(selected_table_data())
+          DT::datatable(
+            json_data()$representation[[new_table_name]],
+            #selected_table_data(),
+            editable  = TRUE,
+            selection = 'multiple',
+            rownames  = FALSE
+          )
+        })
+
       } else {
         # Error notification if the table name is invalid or already exists
         shiny::showNotification("Invalid table name or table already exists.", type = "error")
       }
     })
+
   })
 }
 

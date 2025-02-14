@@ -166,7 +166,6 @@ test_that("select_table_server preserves current selection when possible", {
 #
 #       # Update json_data with new tables
 #       json_data(list("Table1" = data.frame(), "Table2" = data.frame()))
-#       browser()
 #
 #       # Trigger reactivity
 #       #session$flushReact()

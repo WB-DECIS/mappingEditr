@@ -44,7 +44,7 @@ app_ui <- function(request) {
           bslib::card_header("Table Operations"),
           bslib::card_body(
             select_table_ui("table_selector"),
-            add_table_ui("add_table"),
+            #add_table_ui("add_table"),
             delete_table_ui("delete_table")
           )
         ),

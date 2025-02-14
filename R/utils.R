@@ -186,16 +186,31 @@ create_mapping_table <- function(full_data,
   # check that only valid table types are being passed
   valid_table_types <- eval(formals(create_mapping_table)$table_type)
   match.arg(table_type, valid_table_types)
-  #browser()
   if (table_type == "Fixed") {
-    new_df <- append_empty_row(input_df = data.frame(FIXED = character(0),
-                                                     stringsAsFactors = FALSE))
-    full_data$representation[[table_name]] <- new_df
+    if (is.null(populated_df)) {
+      new_df <- append_empty_row(input_df = data.frame(FIXED = character(0),
+                                                       LABEL = character(0),
+                                                       stringsAsFactors = FALSE))
+      full_data$representation[[table_name]] <- new_df
 
-    return(full_data)
+      return(full_data)
+    } else {
+      full_data$representation[[table_name]] <- populated_df
+      return(full_data)
+    }
   } else if (table_type == "Mapping") {
-    full_data$representation[[table_name]] <- populated_df
-    return(full_data)
+    if (is.null(populated_df)) {
+      new_df <- append_empty_row(input_df = data.frame(SOURCE = character(0),
+                                                       TARGET = character(0),
+                                                       LABEL = character(0),
+                                                       stringsAsFactors = FALSE))
+      full_data$representation[[table_name]] <- new_df
+
+      return(full_data)
+    } else {
+      full_data$representation[[table_name]] <- populated_df
+      return(full_data)
+    }
   } else {
     return(full_data)
   }
@@ -362,6 +377,7 @@ parse_sdmx_cl <- function(json) {
 #' containing the codelist's IDs and labels.
 #'
 #' @param table_name The name of the table to derive the codelist ID.
+#' @param concepts_to_cl A lookup table linking concepts to their corresponding codelists
 #' @param instance_url A function or string representing the base URL of the API endpoint.
 #'
 #' @return A data frame with two columns: `ID` and `LABEL`. Returns `NULL` if an error occurs.
@@ -373,17 +389,19 @@ parse_sdmx_cl <- function(json) {
 #' head(df)
 #'
 #' @export
-fetch_cl <- function(table_name, instance_url) {
+fetch_cl <- function(table_name, concepts_to_cl, instance_url) {
   # Initialize the result
   codelist_df <- NULL
-  cl_id <- paste0("CL_", table_name)
+  # retrieve correct codelist ID
+  cl_id <- concepts_to_cl$codelist_id[concepts_to_cl$concept_id == table_name]
+  cl_id <- parse_dsd_id(cl_id)
 
   tryCatch({
     # Construct the API URL
     api_base_url <- instance_url
     api_url <- paste0(
       api_base_url,
-      "FMR/ws/public/sdmxapi/rest/codelist/WB/",
+      "FMR/ws/public/sdmxapi/rest/codelist/",
       cl_id,
       "?format=fusion-json"
     )

@@ -4,10 +4,12 @@
 \alias{fetch_cl}
 \title{Fetch and Parse SDMX Codelist}
 \usage{
-fetch_cl(table_name, instance_url)
+fetch_cl(table_name, concepts_to_cl, instance_url)
 }
 \arguments{
 \item{table_name}{The name of the table to derive the codelist ID.}
+
+\item{concepts_to_cl}{A lookup table linking concepts to their corresponding codelists}
 
 \item{instance_url}{A function or string representing the base URL of the API endpoint.}
 }
