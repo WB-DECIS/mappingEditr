@@ -13,8 +13,8 @@ select_fmr_ui <- function(id) {
   shiny::selectInput(
     inputId = ns("instance_choice"),
     label = "Select FMR instance:",
-    choices = c("FMR QA", "FMR PROD"),
-    selected = "FMR QA"  # Default selection is PROD
+    choices = c("FMR PROD", "FMR QA"),
+    selected = "FMR PROD"  # Default selection is PROD
   )
 }
 
