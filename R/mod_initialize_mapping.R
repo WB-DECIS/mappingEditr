@@ -86,8 +86,12 @@ initialize_map_server <- function(id,
       concepts <- extract_concepts_from_dsd(dsd_info)
       all_concept_ids <- c(concepts$dimensions, concepts$attributes, concepts$measures)
 
-      new_json_data <- list(components = vector("list", length = 1),
-                            representation = vector("list", length = length(all_concept_ids)))
+      new_json_data <- list(
+        schema_version = "v1",
+        dsd_id = dsd_id,
+        components = vector("list", length = 1),
+        representation = vector("list", length = length(all_concept_ids))
+        )
 
       ## Fill out json_data structure with DSD information ----
       ### Add components ----
